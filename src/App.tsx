@@ -1,14 +1,21 @@
-import { Box, Container, AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { Menu as MenuIcon, Dashboard, Help, Settings } from '@mui/icons-material';
+import { Box, Container, AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, Button } from '@mui/material';
+import { Menu as MenuIcon, Dashboard, Help, Settings, Logout as LogoutIcon } from '@mui/icons-material';
 import { useState } from 'react';
 import TicketsPage from './pages/TicketsPage';
+import LoginPage from './pages/LoginPage';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
-function App() {
+function AppContent() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const { isAuthenticated, user, logout, login, isLoading, error } = useAuth();
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
+
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={login} isLoading={isLoading} error={error} />;
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -23,9 +30,21 @@ function App() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             Help Desk
           </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Typography variant="body1" noWrap>
+              {user?.name}
+            </Typography>
+            <Button
+              color="inherit"
+              onClick={logout}
+              startIcon={<LogoutIcon />}
+            >
+              Выйти
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -85,4 +104,10 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
