@@ -1,6 +1,17 @@
 export type TicketPriority = 'low' | 'medium' | 'high';
 export type TicketStatus = 'open' | 'in_progress' | 'resolved' | 'closed';
 
+export interface Comment {
+  id: string;
+  ticketId: string;
+  content: string;
+  createdAt: string;
+  createdBy: {
+    id: string;
+    name: string;
+  };
+}
+
 export interface Ticket {
   id: string;
   title: string;
@@ -11,4 +22,5 @@ export interface Ticket {
   updatedAt: string;
   assignedTo?: string;
   createdBy: string;
+  comments?: Comment[];
 } 
