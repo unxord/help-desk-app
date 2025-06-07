@@ -1,6 +1,7 @@
 import { Box, Container, AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { Menu as MenuIcon, Dashboard, Help, Settings } from '@mui/icons-material';
 import { useState } from 'react';
+import TicketsPage from './pages/TicketsPage';
 
 function App() {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -77,12 +78,7 @@ function App() {
       >
         <Toolbar />
         <Container maxWidth="lg">
-          <Typography variant="h4" component="h1" gutterBottom>
-            Добро пожаловать в Help Desk
-          </Typography>
-          <Typography variant="body1">
-            Здесь будет размещено основное содержимое приложения.
-          </Typography>
+          <TicketsPage />
         </Container>
       </Box>
     </Box>
