@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { Add as AddIcon } from '@mui/icons-material';
 import type { Ticket } from '../types/ticket';
 import TicketList from '../components/TicketList';
 import TicketForm from '../components/TicketForm';
+import TicketFilters from '../components/TicketFilters';
+import type { TicketFilters as ITicketFilters } from '../components/TicketFilters';
 
 const mockTickets: Ticket[] = [
   {
@@ -33,6 +35,25 @@ export default function TicketsPage() {
   const [tickets, setTickets] = useState<Ticket[]>(mockTickets);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<Ticket | undefined>();
+  const [filters, setFilters] = useState<ITicketFilters>({
+    search: '',
+    status: 'all',
+    priority: 'all'
+  });
+
+  const filteredTickets = useMemo(() => {
+    return tickets.filter(ticket => {
+      const searchMatch = filters.search.toLowerCase() === '' ||
+        ticket.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        ticket.description.toLowerCase().includes(filters.search.toLowerCase());
+
+      const statusMatch = filters.status === 'all' || ticket.status === filters.status;
+
+      const priorityMatch = filters.priority === 'all' || ticket.priority === filters.priority;
+
+      return searchMatch && statusMatch && priorityMatch;
+    });
+  }, [tickets, filters]);
 
   const handleCreateTicket = (ticketData: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>) => {
     const newTicket: Ticket = {
@@ -89,8 +110,10 @@ export default function TicketsPage() {
         </Button>
       </Box>
 
+      <TicketFilters onFiltersChange={setFilters} />
+
       <TicketList
-        tickets={tickets}
+        tickets={filteredTickets}
         onEdit={handleOpenForm}
         onDelete={handleDeleteTicket}
       />
