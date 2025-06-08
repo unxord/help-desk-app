@@ -23,6 +23,13 @@ const mockUsers = [
     password: 'support123',
     name: 'Специалист поддержки',
     role: 'support'
+  },
+  {
+    id: '3',
+    email: 'user@example.com',
+    password: 'user123',
+    name: 'Пользователь',
+    role: 'user'
   }
 ];
 

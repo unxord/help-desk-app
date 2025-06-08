@@ -1,38 +1,25 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
+import Layout from './components/Layout';
 import LoginWrapper from './components/LoginWrapper';
 import TicketsPage from './pages/TicketsPage';
 import TicketDetailsWrapper from './components/TicketDetailsWrapper';
-import Layout from './components/Layout';
-import { useAuth } from './contexts/AuthContext';
-
-// Компонент для защиты маршрутов
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuth();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  
-  return <>{children}</>;
-}
+import DashboardPage from './pages/DashboardPage';
+import SettingsPage from './pages/SettingsPage';
+import ProtectedRoute from '../src/components/ProtectedRoute';
 
 export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Navigate to="/tickets" replace />
-  },
   {
     path: '/login',
     element: <LoginWrapper />
   },
   {
     path: '/',
-    element: (
-      <ProtectedRoute>
-        <Layout />
-      </ProtectedRoute>
-    ),
+    element: <ProtectedRoute><Layout /></ProtectedRoute>,
     children: [
+      {
+        path: '',
+        element: <DashboardPage />
+      },
       {
         path: 'tickets',
         element: <TicketsPage />
@@ -42,12 +29,8 @@ export const router = createBrowserRouter([
         element: <TicketDetailsWrapper />
       },
       {
-        path: 'dashboard',
-        element: <div>Панель управления (в разработке)</div>
-      },
-      {
         path: 'settings',
-        element: <div>Настройки (в разработке)</div>
+        element: <SettingsPage />
       }
     ]
   }

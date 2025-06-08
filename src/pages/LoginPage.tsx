@@ -59,7 +59,7 @@ export default function LoginPage({ onLogin, isLoading = false, error = null }: 
           }}
         >
           <Typography component="h1" variant="h5" sx={{ mb: 3 }}>
-            Help Desk - Вход в систему
+            Вход в систему
           </Typography>
 
           {error && (
