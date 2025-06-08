@@ -186,7 +186,6 @@ export default function Layout() {
               <IconButton
                 onClick={handleProfileMenuOpen}
                 size="small"
-                sx={{ ml: { xs: 0, sm: 2 } }}
                 aria-controls={Boolean(anchorEl) ? 'account-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={Boolean(anchorEl) ? 'true' : undefined}
@@ -198,7 +197,7 @@ export default function Layout() {
                     sx={{ width: 32, height: 32 }}
                   />
                 ) : (
-                  <Avatar sx={{ width: 32, height: 32, bgcolor: 'primary.main' }}>
+                  <Avatar sx={{ width: 36, height: 36, bgcolor: '#2A95AA' }}>
                     {user?.name?.charAt(0)}
                   </Avatar>
                 )}

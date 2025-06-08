@@ -21,7 +21,6 @@ import {
   Edit as EditIcon
 } from '@mui/icons-material';
 import type { Ticket } from '../types/ticket';
-import TicketList from '../components/TicketList';
 import TicketForm from '../components/TicketForm';
 import TicketFilters from '../components/TicketFilters';
 import type { TicketFilters as ITicketFilters } from '../components/TicketFilters';
@@ -99,10 +98,6 @@ export default function TicketsPage() {
     setTickets(tickets.map(ticket => 
       ticket.id === selectedTicket.id ? updatedTicket : ticket
     ));
-  };
-
-  const handleDeleteTicket = (ticketId: string) => {
-    setTickets(tickets.filter(ticket => ticket.id !== ticketId));
   };
 
   const handleOpenForm = (ticket?: Ticket) => {
