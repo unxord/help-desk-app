@@ -29,6 +29,7 @@ import {
   Person as PersonIcon
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
+import { getVersionString } from '../version';
 
 const drawerWidth = 240;
 
@@ -69,9 +70,9 @@ export default function Layout() {
   ];
 
   const drawer = (
-    <Box>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ 
-        p: 2, 
+        p: 1.5, 
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'space-between'
@@ -126,6 +127,16 @@ export default function Layout() {
           </ListItemButton>
         ))}
       </List>
+      <Box sx={{ 
+        mt: 'auto', 
+        p: 2, 
+        textAlign: 'center',
+        opacity: 0.7
+      }}>
+        <Typography variant="caption">
+          {getVersionString()}
+        </Typography>
+      </Box>
     </Box>
   );
 
