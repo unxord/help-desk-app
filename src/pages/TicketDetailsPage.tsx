@@ -19,6 +19,7 @@ import CommentSection from '../components/CommentSection';
 import TicketForm from '../components/TicketForm';
 import { formatDate } from '../utils/format';
 import { getPriorityColor, getStatusColor } from '../utils/getColor';
+import { statusTranslations, priorityTranslations } from '../utils/translations';
 
 interface TicketDetailsPageProps {
   ticket: Ticket;
@@ -78,7 +79,7 @@ export default function TicketDetailsPage({
                 Статус
               </Typography>
               <Chip
-                label={ticket.status.replace('_', ' ')}
+                label={statusTranslations[ticket.status]}
                 color={getStatusColor(ticket.status)}
                 size="small"
               />
@@ -88,7 +89,7 @@ export default function TicketDetailsPage({
                 Приоритет
               </Typography>
               <Chip
-                label={ticket.priority}
+                label={priorityTranslations[ticket.priority]}
                 color={getPriorityColor(ticket.priority)}
                 size="small"
               />

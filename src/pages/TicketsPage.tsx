@@ -27,30 +27,8 @@ import TicketFilters from '../components/TicketFilters';
 import type { TicketFilters as ITicketFilters } from '../components/TicketFilters';
 import { formatDate } from '../utils/format';
 import { getPriorityColor, getStatusColor } from '../utils/getColor';
-
-const mockTickets: Ticket[] = [
-  {
-    id: '1',
-    title: 'Проблема с авторизацией',
-    description: 'Не удается войти в систему после обновления пароля',
-    status: 'open',
-    priority: 'high',
-    createdAt: '2024-03-20T10:00:00Z',
-    updatedAt: '2024-03-20T10:00:00Z',
-    createdBy: 'user1'
-  },
-  {
-    id: '2',
-    title: 'Ошибка при загрузке файлов',
-    description: 'При попытке загрузить файл более 5MB возникает ошибка',
-    status: 'in_progress',
-    priority: 'medium',
-    createdAt: '2024-03-19T15:30:00Z',
-    updatedAt: '2024-03-19T16:45:00Z',
-    createdBy: 'user2',
-    assignedTo: 'support1'
-  }
-];
+import { mockTickets } from '../utils/mock';
+import { statusTranslations, priorityTranslations } from '../utils/translations';
 
 export default function TicketsPage() {
   const [tickets, setTickets] = useState<Ticket[]>(mockTickets);
@@ -166,14 +144,14 @@ export default function TicketsPage() {
                 <TableCell>{ticket.title}</TableCell>
                 <TableCell>
                   <Chip
-                    label={ticket.status.replace('_', ' ')}
+                    label={statusTranslations[ticket.status]}
                     color={getStatusColor(ticket.status)}
                     size="small"
                   />
                 </TableCell>
                 <TableCell>
                   <Chip
-                    label={ticket.priority}
+                    label={priorityTranslations[ticket.priority]}
                     color={getPriorityColor(ticket.priority)}
                     size="small"
                   />

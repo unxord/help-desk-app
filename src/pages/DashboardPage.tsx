@@ -22,31 +22,8 @@ import {
 import type { Ticket } from '../types/ticket';
 import { formatDate } from '../utils/format';
 import { getPriorityColor, getStatusColor } from '../utils/getColor';
-
-// Моковые данные для демонстрации
-const mockTickets: Ticket[] = [
-  {
-    id: '1',
-    title: 'Проблема с авторизацией',
-    description: 'Не удается войти в систему после обновления пароля',
-    status: 'open',
-    priority: 'high',
-    createdAt: '2024-03-20T10:00:00Z',
-    updatedAt: '2024-03-20T10:00:00Z',
-    createdBy: 'user1'
-  },
-  {
-    id: '2',
-    title: 'Ошибка при загрузке файлов',
-    description: 'При попытке загрузить файл более 5MB возникает ошибка',
-    status: 'in_progress',
-    priority: 'medium',
-    createdAt: '2024-03-19T15:30:00Z',
-    updatedAt: '2024-03-19T16:45:00Z',
-    createdBy: 'user2',
-    assignedTo: 'support1'
-  }
-];
+import { mockTickets } from '../utils/mock';
+import { statusTranslations, priorityTranslations } from '../utils/translations';
 
 interface TicketMetrics {
   total: number;
@@ -192,12 +169,12 @@ export default function DashboardPage() {
                     <Typography component="span" variant="body2">
                       <Box component="span" sx={{ display: 'flex', justifyContent: 'start', mt: 0.5, gap: 1 }}>
                         <Chip
-                          label={ticket.status.replace('_', ' ')}
+                          label={statusTranslations[ticket.status]}
                           color={getStatusColor(ticket.status)}
                           size="small"
                         />
                         <Chip
-                          label={ticket.priority}
+                          label={priorityTranslations[ticket.priority]}
                           color={getPriorityColor(ticket.priority)}
                           size="small"
                         />
