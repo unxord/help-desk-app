@@ -63,8 +63,21 @@ export default function TicketForm({ open, onClose, onSubmit, ticket }: TicketFo
     });
   };
 
+  const handleClear = () => {
+    onClose();
+    setFormData({
+      title: '',
+      description: '',
+      status: 'open' as TicketStatus,
+      priority: 'medium' as TicketPriority,
+      assignedTo: '',
+      createdBy: 'current_user'
+    });
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    handleClear();
     onSubmit(formData);
     onClose();
   };
@@ -127,7 +140,7 @@ export default function TicketForm({ open, onClose, onSubmit, ticket }: TicketFo
           </Box>
         </DialogContent>
         <DialogActions sx={{ padding: 3, pt: 0 }}>
-          <Button onClick={onClose}>Отмена</Button>
+          <Button onClick={handleClear}>Отмена</Button>
           <Button type="submit" variant="contained" color="primary">
             {ticket ? 'Сохранить' : 'Создать'}
           </Button>

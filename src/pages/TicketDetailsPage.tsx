@@ -18,6 +18,7 @@ import { useAuth } from '../contexts/AuthContext';
 import CommentSection from '../components/CommentSection';
 import TicketForm from '../components/TicketForm';
 import { formatDate } from '../utils/format';
+import { getPriorityColor, getStatusColor } from '../utils/getColor';
 
 interface TicketDetailsPageProps {
   ticket: Ticket;
@@ -42,25 +43,6 @@ export default function TicketDetailsPage({
   const handleEdit = (ticketData: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>) => {
     onEdit(ticketData);
     onEditingChange?.(false);
-  };
-
-  const getStatusColor = (status: Ticket['status']) => {
-    const colors = {
-      open: 'info',
-      in_progress: 'warning',
-      resolved: 'success',
-      closed: 'default'
-    } as const;
-    return colors[status];
-  };
-
-  const getPriorityColor = (priority: Ticket['priority']) => {
-    const colors = {
-      low: 'info',
-      medium: 'warning',
-      high: 'error'
-    } as const;
-    return colors[priority];
   };
 
   return (

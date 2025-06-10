@@ -9,7 +9,9 @@ import {
   List,
   ListItem,
   ListItemText,
-  Divider
+  Divider,
+  Chip,
+  TableCell
 } from '@mui/material';
 import {
   PriorityHigh as HighPriorityIcon,
@@ -19,6 +21,7 @@ import {
 } from '@mui/icons-material';
 import type { Ticket } from '../types/ticket';
 import { formatDate } from '../utils/format';
+import { getPriorityColor, getStatusColor } from '../utils/getColor';
 
 // Моковые данные для демонстрации
 const mockTickets: Ticket[] = [
@@ -186,11 +189,18 @@ export default function DashboardPage() {
                 <ListItemText
                   primary={ticket.title}
                   secondary={
-                    <Box component="span" sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
-                      <Typography variant="body2" component="span">
-                        {ticket.status.replace('_', ' ')}
-                      </Typography>
-                      <Typography variant="body2" component="span" color="text.secondary">
+                    <Box component="span" sx={{ display: 'flex', justifyContent: 'start', mt: 0.5, gap: 1 }}>
+                      <Chip
+                        label={ticket.status.replace('_', ' ')}
+                        color={getStatusColor(ticket.status)}
+                        size="small"
+                      />
+                      <Chip
+                        label={ticket.priority}
+                        color={getPriorityColor(ticket.priority)}
+                        size="small"
+                      />
+                      <Typography variant="body2" component="span" color="text.secondary" sx={{ marginLeft: 'auto' }}>
                         {formatDate(ticket.createdAt)}
                       </Typography>
                     </Box>

@@ -26,6 +26,7 @@ import TicketForm from '../components/TicketForm';
 import TicketFilters from '../components/TicketFilters';
 import type { TicketFilters as ITicketFilters } from '../components/TicketFilters';
 import { formatDate } from '../utils/format';
+import { getPriorityColor, getStatusColor } from '../utils/getColor';
 
 const mockTickets: Ticket[] = [
   {
@@ -126,25 +127,6 @@ export default function TicketsPage() {
   const handleCloseForm = () => {
     setSelectedTicket(undefined);
     setIsFormOpen(false);
-  };
-
-  const getStatusColor = (status: Ticket['status']) => {
-    const colors = {
-      open: 'info',
-      in_progress: 'warning',
-      resolved: 'success',
-      closed: 'default'
-    } as const;
-    return colors[status];
-  };
-
-  const getPriorityColor = (priority: Ticket['priority']) => {
-    const colors = {
-      low: 'info',
-      medium: 'warning',
-      high: 'error'
-    } as const;
-    return colors[priority];
   };
 
   return (
