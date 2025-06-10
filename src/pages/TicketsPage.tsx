@@ -13,7 +13,8 @@ import {
   TableRow,
   Chip,
   IconButton,
-  Tooltip
+  Tooltip,
+  TablePagination
 } from '@mui/material';
 import {
   Add as AddIcon,
@@ -58,6 +59,8 @@ export default function TicketsPage() {
     status: 'all',
     priority: 'all'
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
 
   const filteredTickets = useMemo(() => {
@@ -73,6 +76,20 @@ export default function TicketsPage() {
       return searchMatch && statusMatch && priorityMatch;
     });
   }, [tickets, filters]);
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedTickets = useMemo(() => {
+    const startIndex = page * rowsPerPage;
+    return filteredTickets.slice(startIndex, startIndex + rowsPerPage);
+  }, [filteredTickets, page, rowsPerPage]);
 
   const handleCreateTicket = (ticketData: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>) => {
     const newTicket: Ticket = {
@@ -170,7 +187,7 @@ export default function TicketsPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredTickets.map((ticket) => (
+            {paginatedTickets.map((ticket) => (
               <TableRow key={ticket.id}>
                 <TableCell>{ticket.id}</TableCell>
                 <TableCell>{ticket.title}</TableCell>
@@ -214,6 +231,17 @@ export default function TicketsPage() {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={filteredTickets.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage="Строк на странице:"
+          labelDisplayedRows={({ from, to, count }) => `${from}-${to} из ${count}`}
+        />
       </TableContainer>
 
       <TicketForm

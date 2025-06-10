@@ -126,7 +126,7 @@ export default function TicketForm({ open, onClose, onSubmit, ticket }: TicketFo
             />
           </Box>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ padding: 3, pt: 0 }}>
           <Button onClick={onClose}>Отмена</Button>
           <Button type="submit" variant="contained" color="primary">
             {ticket ? 'Сохранить' : 'Создать'}
