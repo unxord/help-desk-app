@@ -64,7 +64,7 @@ export default function Layout() {
   };
 
   const menuItems = [
-    { text: 'Панель управления', icon: <DashboardIcon />, path: '/' },
+    { text: 'Панель управления', icon: <DashboardIcon />, path: '/dashboard' },
     { text: 'Тикеты', icon: <TicketIcon />, path: '/tickets' },
     { text: 'Настройки', icon: <SettingsIcon />, path: '/settings' }
   ];

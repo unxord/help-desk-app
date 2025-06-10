@@ -25,6 +25,7 @@ import type { Ticket } from '../types/ticket';
 import TicketForm from '../components/TicketForm';
 import TicketFilters from '../components/TicketFilters';
 import type { TicketFilters as ITicketFilters } from '../components/TicketFilters';
+import { formatDate } from '../utils/format';
 
 const mockTickets: Ticket[] = [
   {
@@ -144,16 +145,6 @@ export default function TicketsPage() {
       high: 'error'
     } as const;
     return colors[priority];
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('ru-RU', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   return (

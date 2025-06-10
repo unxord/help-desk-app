@@ -18,6 +18,7 @@ import {
   Person as AssignedIcon
 } from '@mui/icons-material';
 import type { Ticket } from '../types/ticket';
+import { formatDate } from '../utils/format';
 
 // Моковые данные для демонстрации
 const mockTickets: Ticket[] = [
@@ -127,16 +128,6 @@ export default function DashboardPage() {
     };
     setMetrics(newMetrics);
   }, [tickets]);
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('ru-RU', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
 
   return (
     <Box>

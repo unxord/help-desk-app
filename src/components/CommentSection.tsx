@@ -12,6 +12,7 @@ import {
 import { Send as SendIcon } from '@mui/icons-material';
 import type { Comment } from '../types/ticket';
 import { useAuth } from '../contexts/AuthContext';
+import { formatDate } from '../utils/format';
 
 interface CommentSectionProps {
   comments: Comment[];
@@ -29,16 +30,6 @@ export default function CommentSection({ comments, onAddComment, isLoading = fal
 
     await onAddComment(newComment.trim());
     setNewComment('');
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('ru-RU', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   return (

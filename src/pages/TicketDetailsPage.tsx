@@ -17,6 +17,7 @@ import type { Ticket, Comment } from '../types/ticket';
 import { useAuth } from '../contexts/AuthContext';
 import CommentSection from '../components/CommentSection';
 import TicketForm from '../components/TicketForm';
+import { formatDate } from '../utils/format';
 
 interface TicketDetailsPageProps {
   ticket: Ticket;
@@ -60,16 +61,6 @@ export default function TicketDetailsPage({
       high: 'error'
     } as const;
     return colors[priority];
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('ru-RU', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
   };
 
   return (
