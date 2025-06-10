@@ -33,12 +33,12 @@ interface Settings {
 }
 
 const defaultSettings: Settings = {
-  emailNotifications: true,
-  desktopNotifications: false,
+  emailNotifications: false,
+  desktopNotifications: true,
   autoAssignment: true,
-  defaultPriority: 'medium',
+  defaultPriority: 'low',
   defaultAssignee: '',
-  ticketsPerPage: 10,
+  ticketsPerPage: 5,
   language: 'ru'
 };
 
@@ -94,20 +94,11 @@ export default function SettingsPage() {
           <ListItem>
             <ListItemText
               primary="Уведомления"
-              secondary="Настройки уведомлений системы"
+              secondary="Настройки оповещений системы"
             />
           </ListItem>
           <ListItem>
             <Box sx={{ pl: 2, width: '100%' }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.emailNotifications}
-                    onChange={handleSwitchChange('emailNotifications')}
-                  />
-                }
-                label="Email уведомления"
-              />
               <FormControlLabel
                 control={
                   <Switch
@@ -116,6 +107,15 @@ export default function SettingsPage() {
                   />
                 }
                 label="Уведомления в браузере"
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={settings.emailNotifications}
+                    onChange={handleSwitchChange('emailNotifications')}
+                  />
+                }
+                label="Email уведомления"
                 sx={{ ml: 4 }}
               />
             </Box>
@@ -127,7 +127,7 @@ export default function SettingsPage() {
           <ListItem>
             <ListItemText
               primary="Тикеты"
-              secondary="Настройки работы с тикетами"
+              secondary="Настройки работы с заявками"
             />
           </ListItem>
           <ListItem>
@@ -181,17 +181,17 @@ export default function SettingsPage() {
           <ListItem>
             <ListItemText
               primary="Интерфейс"
-              secondary="Настройки интерфейса приложения"
+              secondary="Настройки языка приложения"
             />
           </ListItem>
           <ListItem>
             <Box sx={{ pl: 2, width: '100%' }}>
               <FormControl fullWidth>
-                <InputLabel id="language-label">Язык интерфейса</InputLabel>
+                <InputLabel id="language-label">Перевод</InputLabel>
                 <Select
                   labelId="language-label"
                   value={settings.language}
-                  label="Язык интерфейса"
+                  label="Перевод"
                   onChange={handleSelectChange('language')}
                 >
                   <MenuItem value="ru">Русский</MenuItem>
@@ -220,7 +220,7 @@ export default function SettingsPage() {
         onClose={() => setShowSuccess(false)}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert severity="success" sx={{ width: '100%' }}>
+        <Alert severity="success" sx={{ width: '100%', mb: 2 }}>
           Настройки успешно сохранены
         </Alert>
       </Snackbar>

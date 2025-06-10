@@ -1,6 +1,6 @@
 export const APP_VERSION = {
   type: 'alpha',
-  version: '0.0.8'
+  version: '0.0.9'
 };
 
 export const getVersionString = () => `${APP_VERSION.type} v${APP_VERSION.version}`; 

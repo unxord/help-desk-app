@@ -189,21 +189,23 @@ export default function DashboardPage() {
                 <ListItemText
                   primary={ticket.title}
                   secondary={
-                    <Box component="span" sx={{ display: 'flex', justifyContent: 'start', mt: 0.5, gap: 1 }}>
-                      <Chip
-                        label={ticket.status.replace('_', ' ')}
-                        color={getStatusColor(ticket.status)}
-                        size="small"
-                      />
-                      <Chip
-                        label={ticket.priority}
-                        color={getPriorityColor(ticket.priority)}
-                        size="small"
-                      />
-                      <Typography variant="body2" component="span" color="text.secondary" sx={{ marginLeft: 'auto' }}>
-                        {formatDate(ticket.createdAt)}
-                      </Typography>
-                    </Box>
+                    <Typography component="span" variant="body2">
+                      <Box component="span" sx={{ display: 'flex', justifyContent: 'start', mt: 0.5, gap: 1 }}>
+                        <Chip
+                          label={ticket.status.replace('_', ' ')}
+                          color={getStatusColor(ticket.status)}
+                          size="small"
+                        />
+                        <Chip
+                          label={ticket.priority}
+                          color={getPriorityColor(ticket.priority)}
+                          size="small"
+                        />
+                        <Typography variant="body2" component="span" color="text.secondary" sx={{ marginLeft: 'auto' }}>
+                          {formatDate(ticket.createdAt)}
+                        </Typography>
+                      </Box>
+                    </Typography>
                   }
                 />
               </ListItem>

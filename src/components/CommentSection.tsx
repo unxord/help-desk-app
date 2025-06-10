@@ -34,14 +34,14 @@ export default function CommentSection({ comments, onAddComment, isLoading = fal
 
   return (
     <Box sx={{ mt: 4 }}>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant="h6" gutterBottom sx={{ ml: 3}}>
         Комментарии
       </Typography>
 
       {/* Список комментариев */}
       <Box sx={{ mb: 4 }}>
         {comments.length === 0 ? (
-          <Typography color="text.secondary" sx={{ py: 2 }}>
+          <Typography color="text.secondary" sx={{ py: 2, ml: 3 }}>
             Пока нет комментариев
           </Typography>
         ) : (
