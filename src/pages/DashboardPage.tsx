@@ -169,11 +169,13 @@ export default function DashboardPage() {
                     <Typography component="span" variant="body2">
                       <Box component="span" sx={{ display: 'flex', justifyContent: 'start', mt: 0.5, gap: 1 }}>
                         <Chip
+                          variant="outlined"
                           label={statusTranslations[ticket.status]}
                           color={getStatusColor(ticket.status)}
                           size="small"
                         />
                         <Chip
+                          variant="outlined"
                           label={priorityTranslations[ticket.priority]}
                           color={getPriorityColor(ticket.priority)}
                           size="small"

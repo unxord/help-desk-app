@@ -144,6 +144,7 @@ export default function TicketsPage() {
                 <TableCell>{ticket.title}</TableCell>
                 <TableCell>
                   <Chip
+                    variant="outlined"
                     label={statusTranslations[ticket.status]}
                     color={getStatusColor(ticket.status)}
                     size="small"
@@ -151,6 +152,7 @@ export default function TicketsPage() {
                 </TableCell>
                 <TableCell>
                   <Chip
+                    variant="outlined"
                     label={priorityTranslations[ticket.priority]}
                     color={getPriorityColor(ticket.priority)}
                     size="small"

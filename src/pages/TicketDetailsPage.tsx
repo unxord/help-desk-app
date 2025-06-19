@@ -79,6 +79,7 @@ export default function TicketDetailsPage({
                 Статус
               </Typography>
               <Chip
+                variant="outlined"
                 label={statusTranslations[ticket.status]}
                 color={getStatusColor(ticket.status)}
                 size="small"
@@ -89,6 +90,7 @@ export default function TicketDetailsPage({
                 Приоритет
               </Typography>
               <Chip
+                variant="outlined"
                 label={priorityTranslations[ticket.priority]}
                 color={getPriorityColor(ticket.priority)}
                 size="small"

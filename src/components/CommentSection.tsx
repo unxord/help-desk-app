@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import {
   Box,
   Typography,
@@ -22,14 +22,64 @@ interface CommentSectionProps {
 
 export default function CommentSection({ comments, onAddComment, isLoading = false }: CommentSectionProps) {
   const [newComment, setNewComment] = useState('');
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!newComment.trim()) return;
+    if (!newComment.trim() && !attachedFile) return;
 
     await onAddComment(newComment.trim());
     setNewComment('');
+    setAttachedFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  // Обработка нажатия клавиш для отправки по Enter
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      if (newComment.trim() && !isLoading) {
+        handleSubmit(event as any);
+      }
+    }
+  };
+
+  // Обработка выбора файла
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 1024 * 1024) {
+        alert('Файл не должен превышать 1 МБ');
+        return;
+      }
+      setAttachedFile(file);
+    }
+  };
+
+  // Обработка вставки файла через Ctrl+V
+  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    const items = e.clipboardData.items;
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      if (item.kind === 'file') {
+        const file = item.getAsFile();
+        if (file) {
+          if (file.size > 1024 * 1024) {
+            alert('Файл не должен превышать 1 МБ');
+            return;
+          }
+          setAttachedFile(file);
+        }
+      }
+    }
+  };
+
+  // Удаление прикрепленного файла
+  const handleRemoveFile = () => {
+    setAttachedFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   return (
@@ -89,17 +139,44 @@ export default function CommentSection({ comments, onAddComment, isLoading = fal
             onChange={(e) => setNewComment(e.target.value)}
             disabled={isLoading}
             sx={{ mb: 2 }}
+            onKeyDown={handleKeyDown}
+            onPaste={handlePaste}
           />
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          {/* Кнопка и отображение файла */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, flexWrap: 'wrap' }}>
+            <input
+              type="file"
+              style={{ display: 'none' }}
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              disabled={isLoading}
+            />
+            <Button
+              variant="contained"
+              size="small"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isLoading}
+              sx={{ mr: 2 }}
+            >
+              Прикрепить файл
+            </Button>
             <Button
               type="submit"
               variant="contained"
+              size="small"
               endIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
-              disabled={!newComment.trim() || isLoading}
+              disabled={(!newComment.trim() && !attachedFile) || isLoading}
+              sx={{ ml: 'auto' }}
             >
               Отправить
             </Button>
           </Box>
+          {attachedFile && (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <Typography variant="body2">{attachedFile.name}</Typography>
+                <Button size="small" color="error" onClick={handleRemoveFile}>Удалить</Button>
+              </Box>
+            )}
         </form>
       </Paper>
     </Box>

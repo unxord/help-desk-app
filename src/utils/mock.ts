@@ -16,8 +16,8 @@ export const mockTickets: Ticket[] = [
     description: 'Ошибка авторизации в системе №123',
     status: 'open',
     priority: 'high',
-    createdAt: '2024-03-20T10:00:00Z',
-    updatedAt: '2024-03-20T10:00:00Z',
+    createdAt: '2024-03-20T10:00:00',
+    updatedAt: '2024-03-20T10:00:00',
     createdBy: 'user1'
   },
   {
@@ -26,8 +26,8 @@ export const mockTickets: Ticket[] = [
     description: 'Не могу загрузить файлы, не отображаются в списке',
     status: 'in_progress',
     priority: 'medium',
-    createdAt: '2024-03-19T16:45:00Z',
-    updatedAt: '2024-03-19T16:45:00Z',
+    createdAt: '2024-03-19T16:45:00',
+    updatedAt: '2024-03-19T16:45:00',
     createdBy: 'user2',
     assignedTo: 'it.support'
   },
@@ -37,8 +37,8 @@ export const mockTickets: Ticket[] = [
     description: 'Сообщение "Недостаточно прав"',
     status: 'resolved',
     priority: 'low',
-    createdAt: '2024-03-18T12:43:00Z',
-    updatedAt: '2024-03-18T12:43:00Z',
+    createdAt: '2024-03-18T12:43:00',
+    updatedAt: '2024-03-18T12:43:00',
     createdBy: 'user2',
     assignedTo: 'Администратор'
   },
@@ -48,8 +48,8 @@ export const mockTickets: Ticket[] = [
     description: 'Жует бумагу каждые 5 минут, принтер Riso FW-1710',
     status: 'resolved',
     priority: 'low',
-    createdAt: '2024-03-19T20:14:00Z',
-    updatedAt: '2024-03-19T20:14:00Z',
+    createdAt: '2024-03-17T20:14:00',
+    updatedAt: '2024-03-17T20:14:00',
     createdBy: 'user2',
     assignedTo: 'Администратор'
   }
