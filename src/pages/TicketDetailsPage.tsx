@@ -26,6 +26,7 @@ interface TicketDetailsPageProps {
   onBack: () => void;
   onEdit: (ticketData: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>) => void;
   onAddComment: (content: string, file?: File | null) => Promise<void>;
+  onAssign?: (ticketId: string, assignedTo: string) => void;
   isEditing?: boolean;
   onEditingChange?: (isEditing: boolean) => void;
 }
@@ -35,6 +36,7 @@ export default function TicketDetailsPage({
   onBack,
   onEdit,
   onAddComment,
+  onAssign,
   isEditing = false,
   onEditingChange
 }: TicketDetailsPageProps) {
@@ -56,6 +58,19 @@ export default function TicketDetailsPage({
         <Typography variant="h5" component="h1" sx={{ flexGrow: 1 }}>
           Тикет #{ticket.id}
         </Typography>
+        {!ticket.assignedTo && (
+          <Button
+            variant="outlined"
+            color="success"
+            onClick={() => {
+              if (onAssign && user) {
+                onAssign(ticket.id, user.name || user.email || 'Неизвестный пользователь');
+              }
+            }}
+          >
+            Взять в работу
+          </Button>
+        )}
         <Button
           variant="outlined"
           startIcon={<EditIcon />}

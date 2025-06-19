@@ -109,6 +109,17 @@ export default function TicketDetailsWrapper() {
     }
   };
 
+  const handleAssign = async (ticketId: string, assignedTo: string) => {
+    if (!ticket) return;
+    
+    try {
+      await mockUpdateTicket(ticketId, { assignedTo });
+      setTicket(prev => prev ? { ...prev, assignedTo } : null);
+    } catch (error) {
+      console.error('Error assigning ticket:', error);
+    }
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
@@ -127,6 +138,7 @@ export default function TicketDetailsWrapper() {
       onBack={handleBack}
       onEdit={handleEdit}
       onAddComment={handleAddComment}
+      onAssign={handleAssign}
       isEditing={isEditing}
       onEditingChange={setIsEditing}
     />
