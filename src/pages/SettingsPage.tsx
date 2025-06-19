@@ -115,7 +115,7 @@ export default function SettingsPage() {
                     onChange={handleSwitchChange('emailNotifications')}
                   />
                 }
-                label="Email уведомления"
+                label="E-mail уведомления"
                 sx={{ pl: { md: 4, xs: 0 } }}
               />
             </Box>

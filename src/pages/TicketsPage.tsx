@@ -3,32 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Typography,
-  Paper,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Chip,
-  IconButton,
-  Tooltip,
-  TablePagination
+  Button
 } from '@mui/material';
 import {
-  Add as AddIcon,
-  Visibility as VisibilityIcon,
-  Edit as EditIcon
+  Add as AddIcon
 } from '@mui/icons-material';
 import type { Ticket } from '../types/ticket';
 import TicketForm from '../components/TicketForm';
 import TicketFilters from '../components/TicketFilters';
+import TicketsList from '../components/TicketsList';
+import AdaptivePagination from '../components/AdaptivePagination';
 import type { TicketFilters as ITicketFilters } from '../components/TicketFilters';
-import { formatDate } from '../utils/format';
-import { getPriorityColor, getStatusColor } from '../utils/getColor';
 import { mockTickets } from '../utils/mock';
-import { statusTranslations, priorityTranslations } from '../utils/translations';
 
 export default function TicketsPage() {
   const [tickets, setTickets] = useState<Ticket[]>(mockTickets);
@@ -107,13 +93,22 @@ export default function TicketsPage() {
     setIsFormOpen(false);
   };
 
+  const handleViewTicket = (ticketId: string) => {
+    navigate(`/tickets/${ticketId}`);
+  };
+
+  const handleEditTicketFromList = (ticketId: string) => {
+    navigate(`/tickets/${ticketId}`, { state: { isEditing: true } });
+  };
+
   return (
     <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+      <Box sx={{ display: 'flex', alignItems: { xs: 'stretch', sm: 'center' }, mb: 3, gap: 2, flexDirection: { xs: 'column', sm: 'row' },  }}>
         <Typography variant="h5" component="h1">
           Список заявок
         </Typography>
         <Button
+          sx={{ ml: { xs: 0, sm: 'auto' } }}
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => handleOpenForm()}
@@ -124,69 +119,14 @@ export default function TicketsPage() {
 
       <TicketFilters onFiltersChange={setFilters} />
 
-      <TableContainer component={Paper} sx={{ mt: 3 }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Заголовок</TableCell>
-              <TableCell>Статус</TableCell>
-              <TableCell>Приоритет</TableCell>
-              <TableCell>Создан</TableCell>
-              <TableCell>Назначен</TableCell>
-              <TableCell align="right">Действия</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedTickets.map((ticket) => (
-              <TableRow key={ticket.id}>
-                <TableCell>{ticket.id}</TableCell>
-                <TableCell>{ticket.title}</TableCell>
-                <TableCell>
-                  <Chip
-                    variant="outlined"
-                    label={statusTranslations[ticket.status]}
-                    color={getStatusColor(ticket.status)}
-                    size="small"
-                  />
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    variant="outlined"
-                    label={priorityTranslations[ticket.priority]}
-                    color={getPriorityColor(ticket.priority)}
-                    size="small"
-                  />
-                </TableCell>
-                <TableCell>{formatDate(ticket.createdAt)}</TableCell>
-                <TableCell>{ticket.assignedTo || '—'}</TableCell>
-                <TableCell align="right">
-                  <Box sx={{ display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
-                    <Tooltip title="Просмотреть">
-                      <IconButton
-                        size="small"
-                        onClick={() => navigate(`/tickets/${ticket.id}`)}
-                      >
-                        <VisibilityIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Редактировать">
-                      <IconButton
-                        size="small"
-                        onClick={() => navigate(`/tickets/${ticket.id}`, { state: { isEditing: true } })}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
+      <Box sx={{ mt: 3 }}>
+        <TicketsList
+          tickets={paginatedTickets}
+          onViewTicket={handleViewTicket}
+          onEditTicket={handleEditTicketFromList}
+        />
+        
+        <AdaptivePagination
           count={filteredTickets.length}
           rowsPerPage={rowsPerPage}
           page={page}
@@ -195,7 +135,7 @@ export default function TicketsPage() {
           labelRowsPerPage="Строк на странице:"
           labelDisplayedRows={({ from, to, count }) => `${from}-${to} из ${count}`}
         />
-      </TableContainer>
+      </Box>
 
       <TicketForm
         open={isFormOpen}

@@ -47,37 +47,43 @@ export default function TicketDetailsPage({
     onEdit(ticketData);
     onEditingChange?.(false);
   };
-
+  
   return (
     <Box>
       {/* Верхняя панель */}
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-        <IconButton onClick={onBack}>
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography variant="h5" component="h1" sx={{ flexGrow: 1 }}>
-          Тикет #{ticket.id}
-        </Typography>
-        {!ticket.assignedTo && (
+      <Box sx={{ display: 'flex', alignItems: { xs: 'stretch', sm: 'center' }, mb: 3, gap: 2, flexDirection: { xs: 'column', sm: 'row' },  }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1 }}>
+          <IconButton onClick={onBack}>
+            <ArrowBackIcon />
+          </IconButton>
+          <Typography variant="h5" component="h1">
+            Тикет #{ticket.id}
+          </Typography>
+        </Box>
+        <Box sx={{ display: 'flex', alignItems: 'stretch', gap: 1, flexGrow: 0 }}>
+          {!ticket.assignedTo && (
+            <Button
+              variant="outlined"
+              color="success"
+              fullWidth
+              onClick={() => {
+                if (onAssign && user) {
+                  onAssign(ticket.id, user.name || user.email || 'Неизвестный пользователь');
+                }
+              }}
+            >
+              Взять в работу
+            </Button>
+          )}
           <Button
             variant="outlined"
-            color="success"
-            onClick={() => {
-              if (onAssign && user) {
-                onAssign(ticket.id, user.name || user.email || 'Неизвестный пользователь');
-              }
-            }}
+            fullWidth
+            startIcon={<EditIcon />}
+            onClick={() => onEditingChange?.(true)}
           >
-            Взять в работу
+            Редактировать
           </Button>
-        )}
-        <Button
-          variant="outlined"
-          startIcon={<EditIcon />}
-          onClick={() => onEditingChange?.(true)}
-        >
-          Редактировать
-        </Button>
+        </Box>
       </Box>
 
       {/* Основная информация о тикете */}
