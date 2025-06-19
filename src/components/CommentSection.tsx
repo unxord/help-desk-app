@@ -159,7 +159,6 @@ export default function CommentSection({ comments, onAddComment, isLoading = fal
             p: 0,
             background: 'transparent',
           }}
-          onClick={() => setOpenImage(null)}
         >
           {openImage && (
             <img

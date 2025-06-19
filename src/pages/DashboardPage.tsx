@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Paper,
@@ -96,18 +97,29 @@ export default function DashboardPage() {
     resolved: 0,
     highPriority: 0
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Фильтруем активные заявки (открытые и в работе)
+    const activeTickets = tickets.filter(t => t.status === 'open' || t.status === 'in_progress');
+    
     // Вычисляем метрики на основе тикетов
     const newMetrics: TicketMetrics = {
-      total: tickets.length,
+      total: activeTickets.length, // Общее количество активных заявок
       open: tickets.filter(t => t.status === 'open').length,
       inProgress: tickets.filter(t => t.status === 'in_progress').length,
-      resolved: tickets.filter(t => t.status === 'resolved').length,
-      highPriority: tickets.filter(t => t.priority === 'high').length
+      resolved: tickets.filter(t => t.status === 'resolved').length, // Все решенные заявки
+      highPriority: activeTickets.filter(t => t.priority === 'high').length // Высокий приоритет среди активных
     };
     setMetrics(newMetrics);
   }, [tickets]);
+
+  // Фильтруем активные заявки для отображения в списке
+  const activeTickets = tickets.filter(t => t.status === 'open' || t.status === 'in_progress');
+
+  const handleTicketClick = (ticketId: string) => {
+    navigate(`/tickets/${ticketId}`);
+  };
 
   return (
     <Box>
@@ -148,7 +160,7 @@ export default function DashboardPage() {
         <StatCard
           title="Решено"
           value={metrics.resolved}
-          total={metrics.total}
+          total={tickets.length} // Общее количество всех заявок для метрики "Решено"
           icon={<ResolvedIcon />}
           color="#4caf50"
         />
@@ -157,12 +169,20 @@ export default function DashboardPage() {
       {/* Последние тикеты */}
       <Paper sx={{ p: 2 }}>
         <Typography variant="h6" gutterBottom>
-          Последние тикеты
+          Последние открытые заявки
         </Typography>
         <List>
-          {tickets.map((ticket, index) => (
+          {activeTickets.map((ticket, index) => (
             <Box key={ticket.id}>
-              <ListItem>
+              <ListItem
+                onClick={() => handleTicketClick(ticket.id)}
+                sx={{
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'action.hover'
+                  }
+                }}
+              >
                 <ListItemText
                   primary={ticket.title}
                   secondary={
@@ -188,7 +208,7 @@ export default function DashboardPage() {
                   }
                 />
               </ListItem>
-              {index < tickets.length - 1 && <Divider />}
+              {index < activeTickets.length - 1 && <Divider />}
             </Box>
           ))}
         </List>
