@@ -4,21 +4,11 @@ import { CircularProgress, Box } from '@mui/material';
 import TicketDetailsPage from '../pages/TicketDetailsPage';
 import type { Ticket } from '../types/ticket';
 import { useAuth } from '../contexts/AuthContext';
+import { mockTickets } from '../utils/mock';
 
-const mockFetchTicket = async (id: string): Promise<Ticket> => {
+const mockFetchTicket = async (id: string): Promise<Ticket | undefined> => {
   await new Promise(resolve => setTimeout(resolve, 500));
-  
-  return {
-    id,
-    title: 'Тестовый тикет',
-    description: 'Описание тестового тикета',
-    status: 'open',
-    priority: 'medium',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    createdBy: 'user1',
-    comments: []
-  };
+  return mockTickets.find(ticket => ticket.id === id);
 };
 
 const mockUpdateTicket = async (id: string, data: Partial<Ticket>): Promise<void> => {
@@ -48,18 +38,16 @@ export default function TicketDetailsWrapper() {
   useEffect(() => {
     const loadTicket = async () => {
       if (!id) return;
-      
       try {
         setIsLoading(true);
         const data = await mockFetchTicket(id);
-        setTicket(data);
+        setTicket(data || null);
       } catch (error) {
         console.error('Error loading ticket:', error);
       } finally {
         setIsLoading(false);
       }
     };
-
     loadTicket();
   }, [id]);
 

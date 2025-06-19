@@ -13,7 +13,7 @@ export const mockTickets: Ticket[] = [
   {
     id: '1',
     title: 'Проблема с авторизацией',
-    description: '',
+    description: 'Ошибка авторизации в системе №123',
     status: 'open',
     priority: 'high',
     createdAt: '2024-03-20T10:00:00Z',
@@ -23,7 +23,7 @@ export const mockTickets: Ticket[] = [
   {
     id: '2',
     title: 'Ошибка при загрузке файлов',
-    description: '',
+    description: 'Не могу загрузить файлы, не отображаются в списке',
     status: 'in_progress',
     priority: 'medium',
     createdAt: '2024-03-19T16:45:00Z',
@@ -34,7 +34,7 @@ export const mockTickets: Ticket[] = [
   {
     id: '3',
     title: 'Сбой при проведении документа перемещения сырья',
-    description: '',
+    description: 'Сообщение "Недостаточно прав"',
     status: 'resolved',
     priority: 'low',
     createdAt: '2024-03-18T12:43:00Z',
@@ -45,7 +45,7 @@ export const mockTickets: Ticket[] = [
   {
     id: '4',
     title: 'Принтер в экспедиции жует бумагу',
-    description: '',
+    description: 'Жует бумагу каждые 5 минут, принтер Riso FW-1710',
     status: 'resolved',
     priority: 'low',
     createdAt: '2024-03-19T20:14:00Z',
