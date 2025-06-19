@@ -98,7 +98,7 @@ export default function SettingsPage() {
             />
           </ListItem>
           <ListItem>
-            <Box sx={{ pl: 2, width: '100%' }}>
+            <Box sx={{ pl: 2, display: 'flex', flexWrap: 'wrap' }}>
               <FormControlLabel
                 control={
                   <Switch
@@ -116,7 +116,7 @@ export default function SettingsPage() {
                   />
                 }
                 label="Email уведомления"
-                sx={{ ml: 4 }}
+                sx={{ pl: { md: 4, xs: 0 } }}
               />
             </Box>
           </ListItem>

@@ -25,7 +25,7 @@ interface TicketDetailsPageProps {
   ticket: Ticket;
   onBack: () => void;
   onEdit: (ticketData: Omit<Ticket, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  onAddComment: (content: string) => Promise<void>;
+  onAddComment: (content: string, file?: File | null) => Promise<void>;
   isEditing?: boolean;
   onEditingChange?: (isEditing: boolean) => void;
 }

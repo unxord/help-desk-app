@@ -65,14 +65,16 @@ export default function TicketForm({ open, onClose, onSubmit, ticket }: TicketFo
 
   const handleClear = () => {
     onClose();
-    setFormData({
-      title: '',
-      description: '',
-      status: 'open' as TicketStatus,
-      priority: 'medium' as TicketPriority,
-      assignedTo: '',
-      createdBy: 'current_user'
-    });
+    if (!ticket) {
+      setFormData({
+        title: '',
+        description: '',
+        status: 'open' as TicketStatus,
+        priority: 'medium' as TicketPriority,
+        assignedTo: '',
+        createdBy: 'current_user'
+      });
+    }
   };
 
   const handleSubmit = (event: React.FormEvent) => {

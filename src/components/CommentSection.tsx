@@ -7,7 +7,9 @@ import {
   Paper,
   Avatar,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Dialog,
+  DialogContent
 } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
 import type { Comment } from '../types/ticket';
@@ -16,7 +18,7 @@ import { formatDate } from '../utils/format';
 
 interface CommentSectionProps {
   comments: Comment[];
-  onAddComment: (content: string) => Promise<void>;
+  onAddComment: (content: string, file?: File | null) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -26,11 +28,14 @@ export default function CommentSection({ comments, onAddComment, isLoading = fal
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
 
+  // Состояние для модального просмотра изображения
+  const [openImage, setOpenImage] = useState<string | null>(null);
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!newComment.trim() && !attachedFile) return;
 
-    await onAddComment(newComment.trim());
+    await onAddComment(newComment.trim(), attachedFile);
     setNewComment('');
     setAttachedFile(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
@@ -120,12 +125,64 @@ export default function CommentSection({ comments, onAddComment, isLoading = fal
                   <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
                     {comment.content}
                   </Typography>
+                  {/* Превью файла, если есть */}
+                  {comment.fileUrl && (
+                    <Box sx={{ mt: 1 }}>
+                      {comment.fileUrl.match(/^data:image\//) ? (
+                        <img
+                          src={comment.fileUrl}
+                          alt={comment.fileName || 'file'}
+                          style={{ maxWidth: 200, maxHeight: 200, borderRadius: 8, cursor: 'pointer' }}
+                          onClick={() => setOpenImage(comment.fileUrl!)}
+                        />
+                      ) : (
+                        <a href={comment.fileUrl} target="_blank" rel="noopener noreferrer">{comment.fileName || 'Скачать файл'}</a>
+                      )}
+                    </Box>
+                  )}
                 </Box>
               </Box>
             </Paper>
           ))
         )}
       </Box>
+
+      {/* Модальное окно для просмотра изображения */}
+      <Dialog open={!!openImage} onClose={() => setOpenImage(null)} fullScreen PaperProps={{ sx: { backgroundColor: 'rgba(0,0,0,0.85)' } }}>
+        <DialogContent
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100vw',
+            height: '100vh',
+            p: 0,
+            background: 'transparent',
+          }}
+          onClick={() => setOpenImage(null)}
+        >
+          {openImage && (
+            <img
+              src={openImage}
+              alt="Просмотр изображения"
+              style={{
+                maxWidth: '90vw',
+                maxHeight: '90vh',
+                width: 'auto',
+                height: 'auto',
+                boxShadow: '0 0 24px 0 rgba(0,0,0,0.5)',
+                borderRadius: 8,
+                background: '#fff',
+                cursor: 'pointer',
+              }}
+              onClick={e => {
+                e.stopPropagation();
+                setOpenImage(null);
+              }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Форма добавления комментария */}
       <Paper sx={{ p: 2 }}>
@@ -173,7 +230,17 @@ export default function CommentSection({ comments, onAddComment, isLoading = fal
           </Box>
           {attachedFile && (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography variant="body2">{attachedFile.name}</Typography>
+                <Typography variant="body2">
+                  {(() => {
+                    const name = attachedFile.name;
+                    const lastDot = name.lastIndexOf('.');
+                    const ext = lastDot !== -1 ? name.slice(lastDot) : '';
+                    const base = lastDot !== -1 ? name.slice(0, lastDot) : name;
+                    return base.length > 15
+                      ? `${base.slice(0, 15)}..${ext}`
+                      : name;
+                  })()}
+                </Typography>
                 <Button size="small" color="error" onClick={handleRemoveFile}>Удалить</Button>
               </Box>
             )}

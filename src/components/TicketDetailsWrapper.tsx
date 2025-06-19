@@ -68,11 +68,23 @@ export default function TicketDetailsWrapper() {
     }
   };
 
-  const handleAddComment = async (content: string) => {
+  const handleAddComment = async (content: string, file?: File | null) => {
     if (!ticket || !user) return;
     
     try {
       await mockAddComment(ticket.id, content);
+
+      let fileUrl: string | undefined = undefined;
+      let fileName: string | undefined = undefined;
+      if (file) {
+        fileName = file.name;
+        fileUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
 
       const newComment = {
         id: Date.now().toString(),
@@ -82,7 +94,9 @@ export default function TicketDetailsWrapper() {
         createdBy: {
           id: user.id,
           name: user.name
-        }
+        },
+        fileUrl,
+        fileName
       };
       
       setTicket(prev => prev ? {

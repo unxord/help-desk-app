@@ -10,6 +10,8 @@ export interface Comment {
     id: string;
     name: string;
   };
+  fileUrl?: string;
+  fileName?: string;
 }
 
 export interface Ticket {
