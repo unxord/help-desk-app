@@ -1,6 +1,6 @@
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { CircularProgress, Box } from '@mui/material';
+import { PageLoader } from './loaders';
 import TicketDetailsPage from '../pages/TicketDetailsPage';
 import type { Ticket } from '../types/ticket';
 import { useAuth } from '../contexts/AuthContext';
@@ -64,7 +64,6 @@ export default function TicketDetailsWrapper() {
       setIsEditing(false);
     } catch (error) {
       console.error('Error updating ticket:', error);
-
     }
   };
 
@@ -105,7 +104,6 @@ export default function TicketDetailsWrapper() {
       } : null);
     } catch (error) {
       console.error('Error adding comment:', error);
-
     }
   };
 
@@ -121,11 +119,7 @@ export default function TicketDetailsWrapper() {
   };
 
   if (isLoading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-        <CircularProgress />
-      </Box>
-    );
+    return <PageLoader message="Загрузка тикета..." fullHeight={false} />;
   }
 
   if (!ticket) {

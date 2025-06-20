@@ -1,13 +1,17 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { User, LoginCredentials, AuthState } from '../types/auth';
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => void;
+  isInitialized: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+
+// Ключ для localStorage
+const AUTH_STORAGE_KEY = 'helpdesk_auth';
 
 const mockUsers = [
   {
@@ -33,13 +37,66 @@ const mockUsers = [
   }
 ];
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<AuthState>({
+// Функция для загрузки состояния из localStorage
+const loadAuthFromStorage = (): AuthState => {
+  try {
+    const stored = localStorage.getItem(AUTH_STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return {
+        user: parsed.user,
+        isAuthenticated: parsed.isAuthenticated,
+        isLoading: false,
+        error: null
+      };
+    }
+  } catch (error) {
+    console.warn('Ошибка при загрузке авторизации из localStorage:', error);
+  }
+  
+  return {
     user: null,
     isAuthenticated: false,
     isLoading: false,
     error: null
-  });
+  };
+};
+
+// Функция для сохранения состояния в localStorage
+const saveAuthToStorage = (authState: AuthState) => {
+  try {
+    const dataToSave = {
+      user: authState.user,
+      isAuthenticated: authState.isAuthenticated
+    };
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(dataToSave));
+  } catch (error) {
+    console.warn('Ошибка при сохранении авторизации в localStorage:', error);
+  }
+};
+
+// Функция для очистки localStorage
+const clearAuthFromStorage = () => {
+  try {
+    localStorage.removeItem(AUTH_STORAGE_KEY);
+  } catch (error) {
+    console.warn('Ошибка при очистке авторизации из localStorage:', error);
+  }
+};
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [state, setState] = useState<AuthState>(() => loadAuthFromStorage());
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Инициализация при загрузке приложения
+  useEffect(() => {
+    // Имитируем небольшую задержку для проверки авторизации
+    const timer = setTimeout(() => {
+      setIsInitialized(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const login = useCallback(async (credentials: LoginCredentials) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
@@ -55,34 +112,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       const { password, ...userWithoutPassword } = user;
       
-      setState({
+      const newState = {
         user: userWithoutPassword as User,
         isAuthenticated: true,
         isLoading: false,
         error: null
-      });
+      };
+      
+      setState(newState);
+      saveAuthToStorage(newState);
     } catch (error) {
-      setState(prev => ({
-        ...prev,
+      const errorState = {
         user: null,
         isAuthenticated: false,
         isLoading: false,
         error: error instanceof Error ? error.message : 'Произошла ошибка при входе'
-      }));
+      };
+      setState(errorState);
+      clearAuthFromStorage();
     }
   }, []);
 
   const logout = useCallback(() => {
-    setState({
+    const logoutState = {
       user: null,
       isAuthenticated: false,
       isLoading: false,
       error: null
-    });
+    };
+    setState(logoutState);
+    clearAuthFromStorage();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...state, login, logout }}>
+    <AuthContext.Provider value={{ ...state, login, logout, isInitialized }}>
       {children}
     </AuthContext.Provider>
   );
