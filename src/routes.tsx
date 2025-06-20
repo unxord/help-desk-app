@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import LoginWrapper from './components/LoginWrapper';
 import TicketsPage from './pages/TicketsPage';
@@ -17,6 +17,10 @@ export const router = createBrowserRouter([
     element: <ProtectedRoute><Layout /></ProtectedRoute>,
     children: [
       {
+        index: true,
+        element: <Navigate to="/tickets" replace />
+      },
+      {
         path: 'dashboard',
         element: <DashboardPage />
       },
@@ -33,5 +37,9 @@ export const router = createBrowserRouter([
         element: <SettingsPage />
       }
     ]
+  },
+  {
+    path: '*',
+    element: <Navigate to="/tickets" replace />
   }
 ]); 
