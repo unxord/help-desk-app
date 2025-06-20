@@ -15,8 +15,6 @@ import {
   Divider,
   ListItemButton,
   Avatar,
-  Menu,
-  MenuItem,
   Tooltip
 } from '@mui/material';
 import {
@@ -25,8 +23,7 @@ import {
   ConfirmationNumber as TicketIcon,
   Settings as SettingsIcon,
   Logout as LogoutIcon,
-  ChevronLeft as ChevronLeftIcon,
-  Person as PersonIcon
+  ChevronLeft as ChevronLeftIcon
 } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import { getVersionString } from '../version';
@@ -36,7 +33,6 @@ const drawerWidth = 240;
 export default function Layout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(true);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { logout, user } = useAuth();
   const location = useLocation();
   const theme = useTheme();
@@ -50,16 +46,17 @@ export default function Layout() {
     }
   };
 
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleProfileMenuClose = () => {
-    setAnchorEl(null);
+  const handleMenuItemClick = () => {
+    if (isMobile) {
+      setMobileOpen(false);
+    }
   };
 
   const handleLogout = () => {
-    handleProfileMenuClose();
+    logout();
+  };
+
+  const handleLogoutFromDrawer = () => {
     logout();
   };
 
@@ -94,6 +91,7 @@ export default function Layout() {
             component={RouterLink}
             to={item.path}
             selected={location.pathname === item.path}
+            onClick={handleMenuItemClick}
             sx={{
               minHeight: 48,
               justifyContent: drawerOpen ? 'initial' : 'center',
@@ -124,15 +122,59 @@ export default function Layout() {
                 }}
               />
             )}
-          </ListItemButton>
+          </ListItemButton>  
         ))}
       </List>
       <Box sx={{ 
         mt: 'auto', 
-        p: 2, 
+        pb: 2, 
         textAlign: 'center',
         opacity: 0.7
       }}>
+        <ListItemButton
+          onClick={handleLogoutFromDrawer}
+          sx={{
+            minHeight: 48,
+            justifyContent: drawerOpen ? 'center' : 'center',
+            px: 2.5,
+            mb: 1,
+            color: 'error.main',
+            position: 'relative',
+            '&:hover': {
+              backgroundColor: 'error.light',
+              color: 'error.contrastText'
+            }
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: 0,
+              position: 'absolute',
+              left: drawerOpen ? 16 : '50%',
+              transform: drawerOpen ? 'none' : 'translateX(-50%)',
+              justifyContent: 'center',
+              color: 'inherit'
+            }}
+          >
+            <LogoutIcon />
+          </ListItemIcon>
+          {drawerOpen && (
+            <ListItemText 
+              primary="Выйти" 
+              sx={{
+                flex: 'none',
+                textAlign: 'center',
+                '& .MuiListItemText-primary': {
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  color: 'inherit',
+                  flex: 'none'
+                }
+              }}
+            />
+          )}
+        </ListItemButton>
         <Typography variant="caption">
           {getVersionString()}
         </Typography>
@@ -183,72 +225,13 @@ export default function Layout() {
               {user?.name}
             </Typography>
             <Tooltip title={user?.name || 'Профиль'}>
-              <IconButton
-                onClick={handleProfileMenuOpen}
-                size="small"
-                aria-controls={Boolean(anchorEl) ? 'account-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={Boolean(anchorEl) ? 'true' : undefined}
-              >
-                {user?.avatar ? (
-                  <Avatar 
-                    src={user.avatar} 
-                    alt={user?.name} 
-                    sx={{ width: 32, height: 32 }}
-                  />
-                ) : (
-                  <Avatar sx={{ width: 36, height: 36, bgcolor: '#2A95AA' }}>
-                    {user?.name?.charAt(0)}
-                  </Avatar>
-                )}
-              </IconButton>
+              <Avatar sx={{ width: 36, height: 36, bgcolor: '#2A95AA' }}>
+                {user?.name?.charAt(0)}
+              </Avatar>
             </Tooltip>
           </Box>
         </Toolbar>
       </AppBar>
-
-      <Menu
-        anchorEl={anchorEl}
-        id="account-menu"
-        open={Boolean(anchorEl)}
-        onClose={handleProfileMenuClose}
-        onClick={handleProfileMenuClose}
-        PaperProps={{
-          elevation: 0,
-          sx: {
-            overflow: 'visible',
-            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-            mt: 1.5,
-            '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
-              ml: -0.5,
-              mr: 1,
-            },
-            '&:before': {
-              content: '""',
-              display: 'block',
-              position: 'absolute',
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
-              zIndex: 0,
-            },
-          },
-        }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <MenuItem onClick={handleLogout}>
-          <ListItemIcon>
-            <LogoutIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <Typography color="error">Выйти</Typography>
-        </MenuItem>
-      </Menu>
 
       <Box
         component="nav"
